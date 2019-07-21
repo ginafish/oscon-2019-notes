@@ -1,0 +1,27 @@
+* Leah and Holden - Google - Pair Programming OSS Apache Airflow
+
+@leahecole - uses vim
+@holdenkarau - uses emacs, does OSS streams
+Both support Apache products, including Airflow
+
+* Pair programming
+Designated driver, can switch, one navigator
+Driver - person typing on the keyboard, gets to ask questions
+Navigator - gives direction and is second pair of eyes
+Good for when one person has much more experience than the other
+
+* Apache Airflow
+Platform for Authoring, scheduling, and monitoring workflows
+
+* What this is:
+Choosing an airflow issue
+Making a PR
+Submitting it regardless of completeness (WIP PR yay!)
+
+* Steps/Overview what they are doing
+Issue made based on someone's Slack post
+Airflow issue 4730 - https://issues.apache.org/jira/browse/AIRFLOW-4730
+Looking over the code that was proposed to be problematic
+Going back to original Slack report of the issue
+Wrote test to verify the issue
+Worked on fixing the part of the test that shouldn't of failed

@@ -1,0 +1,94 @@
+* Wenbo Zhu - Google - Rea-time streaming APIs: From data center to Internet clients
+
+Mostly about streaming API design, says mostly his own opinions
+
+** What is streaming?
+Kind of machinery between two applications
+Involes handshakes and persistent connections
+Local, runtime concept
+Everything to do w/ runtime api
+Not just a transport feature
+Is an optimization over "atomic" RPC (request-response)
+
+Semantics: client-server & causality
+Handshake: has expilcit client and serer
+Output depends on input
+
+Semantics: runtime message delivery
+Messages: byte chunks or atomic "objects"
+Streaming is incrementally deliverying of bytes as messages
+    Kind of like TCP/IP
+
+Semantics: EOF (end of file notif)
+Half-close: transport provided EOF message
+    Some support
+Can't close output unless input closed first
+tools.ietf.org/html/draft-zhu-http-fullduplex
+
+Streaming patterns: safe ones
+    streamed download
+    streamed upload
+    "simplex bidi" - upload followed by download (like, upload .docx, and then download .pdf as response)
+Can get aborts (cancellations) during request or response processing
+
+Streaming patterns: safe but complicated
+    full duplex (simultaneous upload and download)
+Requires explicit handshake rpc and client-first half-close or abort
+
+Streaming patterns: unsafe ones
+    Long-lived simplex streaming (server pushing things to clients spontaneously [like SNS])
+        Typical use case is to avoid p2p communication
+    Long-lived full-duplex streaming, no request-response causality
+        An optimization over parallel RPCs for stateful applications - similar to batching, and move ordering/retrying to a lower-level stack
+        If gaps, duplicated, etc
+
+
+** System properties
+
+*** Should be proxy (internet) friendly
+Simplex HTTP, but should abort on early errors
+
+*** Fault-tolerance
+You get for free when doing an RPC api
+Messages are basically one way w/ streaming
+
+*** Scalability
+Load balancing, DoS, redirect, etc able to be done by client
+Long-lived transactions => stateful arcitecture
+    Have to do flow-control w/ long-lived transactions, which is not streaming-friendly
+
+** What to do?
+
+Embrace safe patterns, as supported by frameworks
+Stateful APIs can be necessary for performance reasons, which means using unsafe patterns
+Unsafe patterns should be mindfully chosen and have their consequences understood
+
+** Client-driven: data center clients
+Ie: when the client connecting to the server is a data center
+Unsafe patterns are "safe" to adopt
+    Failure-detection is easier (less packet loss, short RTT)
+    Don't see failures as often
+
+** Client driven: Internet clients
+Should avoid unsafe patterns!
+APIs might be used by these clients as a custom transport - look out for you having "ACK"s or keep-alives or ordering, resuming of connections
+
+
+** Different APIs for different clients?
+Actually, yeah want to so that can avoid API consumers
+    If didn't have different APIs, would result in clients having to have multiple implementations
+Avoid addressing transport-level concerns unless trying to build an infrastructure server
+
+** Transport future is coming!
+QUIC is coming (???)
+    Knowing about bytes being lost
+    Will probably be available everywhere
+Need to have a fallback to HTTP & TCP
+OSSification - once QUIC spec is finalized, could be like TCP where really hard to make any updates to because of the number of people using it
+
+** Conclusion
+Avoid long-lived stateful APIs that connect to Internet clients
+Don't use a streaming API as a custom transport
+
+uses bidi
+Some people use pub/sub frameworks

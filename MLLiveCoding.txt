@@ -1,0 +1,45 @@
+* Sarah Robinson - Google - ML Live Coding
+
+** What is machine learning?
+Training inputs -> ML model -> Prediction
+Inputs could be text, etc, and predict sentiment
+Matrix multiplication - inputs * weights + bias = prediction
+Practically all inputs can be represented as matrices
+Categories -> Healthcare: [ 1 0 ], Finance: [ 0, 1 ]
+
+Different degrees available depending on level of abstraction wanted
+We're covering Open Source ML frameworks and AI platform training & prediction (bottom and middle of pyramid respectiely)
+Building a text classification model of stackoverflow
+We're doing Title & body -> tag prediction
+    But... do we need ML for this?  It can be useful because sometimes keywords ommitted
+Step one: get data
+    Ommited/replaced obvious words with avocado
+Prepare data... how to encode?
+    bag of words: input to model is like scrabble letters.  Cannot detect sequence of words.  works on most frequent (build vocab from it)
+    Select vocabulary, input matches on vocab & generates matrix from that
+Keras -> TensorFlow -> CO (colab.research.google.com) -> GCP -> predictions!
+Can train model one places, deploy elsewhere
+Can run custom code at prediction time
+Always shuffle your data
+Commonly take 80% of data to train, 20% to test
+Good mix of 1's and 0's means good vocab size
+
+** Can we do better than 96%?
+We don't know how it's making its predictions - how to open the black box
+Humans are behind the computers - make sure it's unbiased
+    Ex: train a model on cats, and someone uploads a dog, it's going to try to define the dog as a cat
+    Training data should be representative of all the data
+github.com/slundberg/shap < tool for understanding how project is making predictions
+    features
+        negative values, feature not important in predicting
+        more positive, more important
+    inputs
+        blue, words contributed most to prediction
+        red, words contributed least
+
+** What we built
+Custom text classification model with tf.keras
+Deplo
+
+
+bit.ly/so-text-classifier
